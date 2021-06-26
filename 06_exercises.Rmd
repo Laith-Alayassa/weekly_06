@@ -73,22 +73,81 @@ Once your repository is created, you should always open your **project** rather 
 
   1. This app will also use the COVID data. Make sure you load that data and all the libraries you need in the `app.R` file you create. Below, you will post a link to the app that you publish on shinyapps.io. You will create an app to compare states' cumulative number of COVID cases over time. The x-axis will be number of days since 20+ cases and the y-axis will be cumulative cases on the log scale (`scale_y_log10()`). We use number of days since 20+ cases on the x-axis so we can make better comparisons of the curve trajectories. You will have an input box where the user can choose which states to compare (`selectInput()`) and have a submit button to click once the user has chosen all states they're interested in comparing. The graph should display a different line for each state, with labels either on the graph or in a legend. Color can be used if needed. 
   
+  
+[Link for my Shiny App on Github](https://github.com/ShawermaLVR/weekly_06/blob/master/covid_cases/app.R)
+
+
+  
 ## Warm-up exercises from tutorial
 
   2. Read in the fake garden harvest data. Find the data [here](https://github.com/llendway/scraping_etc/blob/main/2020_harvest.csv) and click on the `Raw` button to get a direct link to the data. 
   
+
+```{r}
+# using imoprt wizard (which is super cool)
+
+fake_garden_harvest2 <- read_csv("https://raw.githubusercontent.com/llendway/scraping_etc/main/2020_harvest.csv", 
+#choosing to remove first coloUmn from dropdown menu in wizard instead of selecting -x1
+    col_types = cols(`This is my awesome data!` = col_skip(), 
+        weight = col_number()), na = "MISSING", 
+    skip = 2)
+
+```
+
+or alternatively 
+  
+```{r}
+
+# using read_csv (without additional formatting)
+
+fake_garden_harvest <-
+  read_csv("https://raw.githubusercontent.com/llendway/scraping_etc/main/2020_harvest.csv")
+```
+  
+
+  
+  
   3. Read in this [data](https://www.kaggle.com/heeraldedhia/groceries-dataset) from the kaggle website. You will need to download the data first. Save it to your project/repo folder. Do some quick checks of the data to assure it has been read in appropriately.
+  
+```{r}
+keggle_data <-
+  read_csv("Groceries_dataset.csv")
+```
+  
+```{r}
+keggle_data %>% 
+  mutate(across(where(is.character), as.factor)) %>% 
+  summary()
+```
+```{r}
+keggle_data %>% 
+  group_by(Date) %>% 
+  summarise()
+```
+```{r}
+keggle_data %>% 
+  group_by( Member_number) %>% 
+  summarise()
+```
+  
+  
+```{r}
+keggle_data %>% 
+  group_by(itemDescription) %>% 
+  summarise()
+```
+  
 
   4. CHALLENGE(not graded): Write code to replicate the table shown below (open the .html file to see it) created from the `garden_harvest` data as best as you can. When you get to coloring the cells, I used the following line of code for the `colors` argument:
   
 ```{r, eval=FALSE}
-colors = scales::col_numeric(
-      palette = paletteer::paletteer_d(
-        palette = "RColorBrewer::YlGn"
-      ) %>% as.character()
+# colors = scales::col_numeric(
+#       palette = paletteer::paletteer_d(
+#         palette = "RColorBrewer::YlGn"
+#       ) %>% as.character()
 ```
 
-![](garden_table.html){width=600, height=1000}
+<!-- ![](garden_table.html){width=600, height=1000} -->
 
 
   5. Create a table using `gt` with data from your project or from the `garden_harvest` data if your project data aren't ready.
