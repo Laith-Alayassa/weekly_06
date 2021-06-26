@@ -82,13 +82,13 @@ Once your repository is created, you should always open your **project** rather 
   4. CHALLENGE(not graded): Write code to replicate the table shown below (open the .html file to see it) created from the `garden_harvest` data as best as you can. When you get to coloring the cells, I used the following line of code for the `colors` argument:
   
 ```{r, eval=FALSE}
-# colors = scales::col_numeric(
-#       palette = paletteer::paletteer_d(
-#         palette = "RColorBrewer::YlGn"
-#       ) %>% as.character()
+colors = scales::col_numeric(
+      palette = paletteer::paletteer_d(
+        palette = "RColorBrewer::YlGn"
+      ) %>% as.character()
 ```
 
-<!-- ![](garden_table.html){width=600, height=1000} -->
+![](garden_table.html){width=600, height=1000}
 
 
   5. Create a table using `gt` with data from your project or from the `garden_harvest` data if your project data aren't ready.
