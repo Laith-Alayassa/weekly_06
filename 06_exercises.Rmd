@@ -152,9 +152,87 @@ keggle_data %>%
 
   5. Create a table using `gt` with data from your project or from the `garden_harvest` data if your project data aren't ready.
   
+  
+```{r}
+data("garden_harvest")
+```
+
+```{r}
+gt_garden <- gt(garden_harvest [1:10,]) # only first 10 for space
+```
+
+
+```{r}
+gt_garden %>% 
+  tab_header(
+    title = "Garden Harvest",
+    subtitle = "By vegetable and variety"
+  ) %>%
+  tab_source_note(
+    source_note = "Source: Garden Harvest data set"
+  ) 
+
+```
+
+
+
+
+  
   6. Use `patchwork` operators and functions to combine at least two graphs using your project data or `garden_harvest` data if your project data aren't read.
   
+  
+  
+```{r}
+# Read in the data for the week
 
-**DID YOU REMEMBER TO UNCOMMENT THE OPTIONS AT THE TOP?**
+fishing <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-08/fishing.csv')
+stocked <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-08/stocked.csv')
+
+```
+  
+```{r}
+fishing_lumped <- fishing %>% 
+  filter(lake == "Michigan") %>% 
+  group_by(species) %>% 
+  summarise(total_weight = sum(values, na.rm = TRUE)) %>% 
+  mutate(fish_grp = fct_lump(species, n = 1, w = total_weight))
+```
+
+```{r}
+graph1 <- fishing %>% 
+  inner_join(fishing_lumped, by = "species") %>% 
+  filter(lake == "Michigan") %>% 
+  group_by(year, fish_grp) %>% 
+  summarise(total_values = sum(values, na.rm = TRUE)) %>%
+  ggplot(aes(x = year,
+             y = total_values)) +
+  geom_area(aes(fill = fish_grp))+
+  labs(title = "Fish Distribution in lake Michigan",
+       x = "",
+       y = "Total production (lbs)") +
+  theme(legend.title = element_blank())
+  
+```
+
+```{r}
+graph2 <- fishing %>% 
+  group_by(year) %>% 
+  summarise(total_fish = sum(values , na.rm = TRUE)) %>% 
+  ggplot(aes(x = year,
+             y = total_fish)) +
+  geom_area(fill = '#125d98') +
+  labs(title = "Fish Distribution in all lakes",
+       x = "",
+       y = "Total production (lbs)") +
+  theme(legend.position = 'none')
+```
+  
+  
+```{r}
+graph1 / graph2
+```
+  
+
+
 
 [Github link](https://github.com/ShawermaLVR/weekly_06.git)
